@@ -1,7 +1,7 @@
 (ns example.example
   (:require [example.config :as config]
             [example.system :as system]
-            [example.datastore :as datastore]
+            [example.datastore-api :as datastore]
             [clojure.pprint :as pprint])
   (:gen-class))
 
