@@ -1,3 +1,3 @@
-# protocols
+# example
 
     $ clojure -M:run-m

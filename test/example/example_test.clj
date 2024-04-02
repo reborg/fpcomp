@@ -1,6 +1,6 @@
-(ns protocols.protocols-test
+(ns example.example-test
   (:require [clojure.test :refer :all]
-            [protocols.protocols :refer :all]))
+            [example.example :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."

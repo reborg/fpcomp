@@ -2,9 +2,9 @@
   (:refer-clojure :exclude [test])
   (:require [org.corfield.build :as bb]))
 
-(def lib 'net.clojars.protocols/protocols)
+(def lib 'net.clojars.example/example)
 (def version "0.1.0-SNAPSHOT")
-(def main 'protocols.protocols)
+(def main 'example.example)
 
 (defn test "Run the tests." [opts]
   (bb/run-tests opts))
