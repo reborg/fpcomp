@@ -4,6 +4,6 @@
        #profile {:dev "http://dev.db:4143/"
                  :test "http://test.db:4143/"
                  :local "http://localhost:4143/"}]}
- :datastore #profile {:dev ->DatastoreS3
+ :datastore #profile {:dev ->DatastoreLocalFs
                       :test ->DatastoreS3
                       :local ->DatastoreLocalFs}}

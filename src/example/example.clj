@@ -9,7 +9,7 @@
   (println "### config" (config/aero-config))
   (ds/store "key" "value")
   (println "datastore value for key" (ds/fetch "key"))
-  (system/system-map))
+  system/system-map)
 
 (defn -main
   [& args]

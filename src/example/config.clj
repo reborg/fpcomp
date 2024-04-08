@@ -9,7 +9,9 @@
    "example-config.edn"
    {:profile (or override-env env)}))
 
-(defn load [& [override-env]]
+(defn load
+  "Return plain configuration without integrant system"
+  [& [override-env]]
   (dissoc (aero-config override-env) :ig/system))
 
 (defn components []

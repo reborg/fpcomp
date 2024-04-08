@@ -1,9 +1,11 @@
 (ns example.components.system
   (:require [integrant.core :as ig]
-            [example.config :as config]
-            [example.components.database]
-            ))
+            [example.config :as config]))
 
-(defn system-map []
+(def system-map
   (-> (config/components)
       ig/init))
+
+(def db
+  (-> system-map
+      :example.components.database/db))

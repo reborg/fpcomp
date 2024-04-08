@@ -1,20 +1,26 @@
-(ns example.protocols.datastore)
+(ns example.protocols.datastore
+  (:require
+   [example.components.database :as db]))
 
 (defprotocol Datastore
-  (fetch [this k])
-  (store [this k v]))
+  (fetch [this])
+  (store [this v]))
 
-(defrecord DatastoreLocalFs [path]
+(defrecord DatastoreLocalFs [k]
   Datastore
-  (fetch [this k] (slurp (str path "/" k)))
-  (store [this k v] (spit (str path "/" k) v)))
+  (fetch [this] (slurp (:k this)))
+  (store [this v] (spit (:k this) v)))
 
-(defrecord DatastoreS3 [bucket]
+(defrecord DatastoreS3 [k]
   Datastore
-  (fetch [this k] (slurp (str "s3://" bucket "/" k)))
-  (store [this k v] (spit (str "s3://" bucket "/" k) v)))
+  (fetch [this] (slurp (:k this)))
+  (store [this v] (spit (:k this) v)))
 
-(defrecord DatastoreDB [conn]
+(defrecord DatastoreDB [k]
   Datastore
-  (fetch [this k] (str conn "SELECT value FROM datastore WHERE key = ?" k))
-  (store [this k v] (str conn "INSERT INTO datastore (key, value) VALUES (?, ?)" k v)))
+  (fetch [this]
+    (let [q (format "SELECT value FROM datastore WHERE key = '%s'" (:k this))]
+      (db/execute q)))
+  (store [this v]
+    (let [q (format "INSERT INTO datastore (key, value) VALUES ('%s', '%s')" (:k this) v)]
+      (db/execute q))))
