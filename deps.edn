@@ -1,6 +1,7 @@
 {:paths ["src" "resources"]
  :deps {org.clojure/clojure {:mvn/version "1.11.2"}
         integrant/integrant {:mvn/version "0.8.1"}
+        aero/aero {:mvn/version "1.1.6"}
         ring/ring {:mvn/version "1.12.1"}}
  :aliases
  {:run-m {:main-opts ["-m" "example.example"]}

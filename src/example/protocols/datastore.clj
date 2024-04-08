@@ -2,7 +2,7 @@
 
 (defprotocol Datastore
   (fetch [this k])
-  (store [this k v])
+  (store [this k v]))
 
 (defrecord DatastoreLocalFs [path]
   Datastore
@@ -13,3 +13,8 @@
   Datastore
   (fetch [this k] (slurp (str "s3://" bucket "/" k)))
   (store [this k v] (spit (str "s3://" bucket "/" k) v)))
+
+(defrecord DatastoreDB [conn]
+  Datastore
+  (fetch [this k] (str conn "SELECT value FROM datastore WHERE key = ?" k))
+  (store [this k v] (str conn "INSERT INTO datastore (key, value) VALUES (?, ?)" k v)))

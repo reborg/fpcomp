@@ -1,16 +1,16 @@
 (ns example.example
   (:require [example.config :as config]
-            [example.system :as system]
-            [example.datastore-api :as datastore]
-            [clojure.pprint :as pprint])
+            [example.components.system :as system]
+            [example.datastore-api :as ds])
   (:gen-class))
 
 (defn stuff
   []
-  (datastore/store "key" "value")
-  (println "Datastore value for key" (datastore/fetch "key")))
+  (println "### config" (config/aero-config))
+  (ds/store "key" "value")
+  (println "datastore value for key" (ds/fetch "key"))
+  (system/system-map))
 
 (defn -main
   [& args]
-  (println "Integrant, example, configuration example for ENV" config/env)
   (stuff))

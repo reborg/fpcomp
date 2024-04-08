@@ -1,7 +1,16 @@
 (ns example.config
- (:require [integrant.core :as ig]))
+  (:require
+   [aero.core :as aero]))
 
-(def env (or (System/getenv "ENV") "dev"))
+(def env (keyword (or (System/getenv "ENV") "dev")))
 
-(def config
-  (ig/read-string (slurp "config.edn")))
+(defn aero-config [& [override-env]]
+  (aero/read-config
+   "example-config.edn"
+   {:profile (or override-env env)}))
+
+(defn load [& [override-env]]
+  (dissoc (aero-config override-env) :ig/system))
+
+(defn components []
+  (:ig/system (aero-config)))
