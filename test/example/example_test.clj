@@ -4,5 +4,5 @@
             ))
 
 (deftest fetching-from-local-fs
-  (testing ""
-    (is (= "" (ds/fetch "test/key.txt")))))
+  (testing "fetching from local fs"
+    (is (= "works\n" (ds/fetch "test/key.txt")))))

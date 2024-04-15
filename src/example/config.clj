@@ -2,7 +2,7 @@
   (:require
    [aero.core :as aero]))
 
-(def env (keyword (or (System/getenv "ENV") "dev")))
+(def env (keyword (or (System/getenv "ENV") (System/getProperty "app.env") "dev")))
 
 (defn aero-config [& [override-env]]
   (aero/read-config
