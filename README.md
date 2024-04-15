@@ -40,3 +40,35 @@ We can extend such behavior to data in different ways. We can extend all strings
     (let [q (format "INSERT INTO datastore (key, value) VALUES ('%s', '%s')" (:k this) v)]
       (db/execute q))))
 ```
+
+There is no need to maintain a long lived Datastore component because the datastore interface is not necessarily stateful. The choice for a datastore backend might require or not a stateful component. For example, the local file system or S3 as the datastore backend do not require any state. S3 (and many other AWS components) work with a REST interface which doesn't impose any state on the caller. The database backend, however, requires a connection to be established and maintained. This is where we can introduce a component to manage the lifecycle of the connection which the Datastore uses.
+
+### Resolving defrecords
+
+The specific defrecord to use based on environment can be configured as follows:
+
+```clojure
+{:datastore #profile {:dev ->DatastoreLocalFs
+                      :test ->DatastoreS3
+                      :prod ->DatastoreDB}}
+```
+
+Each environment specify the defrecord constructor to use as a symbol. An instance of the correct `defrecord` to create can be resolved at runtime as follows:
+
+```clj
+(defn for-key
+  "Override ENV added here for testing purposes."
+  [k & [override-env]]
+  (let [init-fn (->> (config/load-config override-env)
+                     :datastore
+                     (ns-resolve (the-ns 'example.protocols.datastore)))]
+    (init-fn k)))
+```
+
+From the perspective of the client using the datastore abstraction, there is nothing to know about how the datastore have been resolved or how the database connection has been acquired:
+
+```clj
+(require '[example.datastore-api :as ds])
+(ds/fetch "test/key.txt")
+(ds/store "test/key.txt" "value")
+```
