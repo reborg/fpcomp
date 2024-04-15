@@ -4,7 +4,7 @@
 
 (defn for-key
   [k]
-  (let [init-fn (->> (config/load)
+  (let [init-fn (->> (config/load-config)
                      :datastore
                      (ns-resolve (the-ns 'example.protocols.datastore)))]
     (init-fn k)))
