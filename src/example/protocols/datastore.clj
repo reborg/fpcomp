@@ -25,4 +25,3 @@
   (store [this v]
     (let [q (format "INSERT INTO datastore (key, value) VALUES ('%s', '%s')" (:k this) v)]
       (db/execute q))))
-

@@ -3,7 +3,7 @@
   #or [#env DB_URL
        #profile {:dev "http://dev.db:4143/"
                  :test "http://test.db:4143/"
-                 :local "http://localhost:4143/"}]}
+                 :prod "http://prod.db:4143/"}]}
  :datastore #profile {:dev ->DatastoreLocalFs
                       :test ->DatastoreS3
-                      :local ->DatastoreLocalFs}}
+                      :prod ->DatastoreDB}}
