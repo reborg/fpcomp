@@ -1,6 +1,7 @@
 (ns example.protocols.datastore
   (:require
-   [example.components.database :as db]))
+   [example.components.database :as db]
+   [example.config :as config]))
 
 (defprotocol Datastore
   (fetch [this])
@@ -24,3 +25,4 @@
   (store [this v]
     (let [q (format "INSERT INTO datastore (key, value) VALUES ('%s', '%s')" (:k this) v)]
       (db/execute q))))
+

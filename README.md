@@ -4,19 +4,39 @@
 
 ### General Idea
 
-- Components, in a functional context, are long-lived bit of information that are shared across function calls.
-- Differently from a var in a namespace, components also have a lifecycle that we want to control independently from when the namespace is loaded, or to impose a specific initialization order.
-- This is when we want to look at component libraries and pretty much nothing else.
-- If we didn't limit ourselves to a particular component definition, we could essentially have var defined for every piece of data and passing them around similarly to object-oriented programming (OOP).
+In a functional context, components are long-lived entities referenced globally. They typically represent tangible resources such as connections, servers, threads, IO operations, and other side effectful elements. The discipline of components specifies precise boundaries for managing side effects. Unlike a variable in a namespace, components have a lifecycle that we wish to manage independently of when the namespace is loaded or to enforce a specific initialization order. This is where we turn to component libraries that provide tools for handling component lifecycles. Unlike object-oriented programming, components adhere strictly to the usage pattern outlined above, as introducing stateful objects tends to complicate program reasoning.
 
 ### Components and Polymorphism
 
-- A component is not required for polymorphism.
-- We can have polymorphic dispatch without components.
-- For example, a "path" in a file system is a simple type of data which is essentially just a string.
-- We can fetch the content at that "path" depending on which environment the application is running in.
-- If it's running locally, we `(fetch path)` to see the content of a local file.
-- If it's running in "test", we can `(fetch path)` and access a file on S3 or even a database.
-- Similarly, we could `(store path value)`.
-- We just discovered a protocol which we call a Datastore.
-- We can fetch from datastore, we can store into the datastore using the "path" as a key.
+A component is not required for polymorphism as we can have polymorphic dispatch without components. For example, a "Path" in a file system is a simple type of data to descrie the location of an object. A typical use case would be to fetch the content for that path depending on which environment the application is running in: if it's running locally, we `(fetch path)` to see the content of a local file. If it's running in a AWS environment, we can `(fetch path)` and access a file on S3 (or a database). Similarly, we could `(store path value)` based on the environment.
+
+Let's call this abstraction a "Datastore" from which we can fetch/store given a path. The abstraction is the behavior that we can capture with this simple protocol:
+
+```clojure
+(defprotocol Datastore
+  (fetch [this])
+  (store [this v]))
+```
+
+We can extend such behavior to data in different ways. We can extend all strings to have this behavior (assuming a string can always represent a path) or we could create a specific `defrecord` for it:
+
+```clojure
+(defrecord DatastoreLocalFs [k]
+  Datastore
+  (fetch [this] (println "fetch local") (slurp (:k this)))
+  (store [this v] (println "store local") (spit (:k this) v)))
+
+(defrecord DatastoreS3 [k]
+  Datastore
+  (fetch [this] (println "fetch s3") (slurp (:k this)))
+  (store [this v] (println "store s3") (spit (:k this) v)))
+
+(defrecord DatastoreDB [k]
+  Datastore
+  (fetch [this]
+    (let [q (format "SELECT value FROM datastore WHERE key = '%s'" (:k this))]
+      (db/execute q)))
+  (store [this v]
+    (let [q (format "INSERT INTO datastore (key, value) VALUES ('%s', '%s')" (:k this) v)]
+      (db/execute q))))
+```

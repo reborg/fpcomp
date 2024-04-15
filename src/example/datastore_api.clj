@@ -1,12 +1,20 @@
 (ns example.datastore-api
-  (:require [example.config :as config]))
+  (:require [example.config :as config]
+            [example.protocols.datastore :as datastore]))
 
-(defn- active-ds
-  [env]
-  (println "### config" (resolve (:datastore (config/load))))
-  )
+(defn for-key
+  [k]
+  (let [init-fn (->> (config/load)
+                     :datastore
+                     (ns-resolve (the-ns 'example.protocols.datastore)))]
+    (init-fn k)))
 
 (defn fetch [k]
-  (let [ds (active-ds config/env)]))
+  (-> k
+      for-key
+      datastore/fetch))
 
-(defn store [k v])
+(defn store [k v]
+  (-> k
+      for-key
+      (datastore/store v)))
