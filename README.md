@@ -4,7 +4,7 @@
 
 ### General Idea
 
-In a functional context, components are long-lived entities referenced globally. They typically represent tangible resources such as connections, servers, threads, IO operations, and other side effectful elements. The discipline of components specifies precise boundaries for managing side effects. Unlike a variable in a namespace, components have a lifecycle that we wish to manage independently of when the namespace is loaded or to enforce a specific initialization order. This is where we turn to component libraries that provide tools for handling component lifecycles. Unlike object-oriented programming, components adhere strictly to the usage pattern outlined above, as introducing stateful objects tends to complicate program reasoning.
+In a functional context, components are long-lived entities referenced globally. They typically represent tangible resources such as connections, servers, threads, IO operations, and other side effectful elements. The discipline of components specifies precise boundaries for managing side effects. Unlike a variable in a namespace, components have a lifecycle that we wish to manage independently of when the namespace is loaded or to enforce a specific initialization order. This is where we turn to component libraries that provide tools for handling component lifecycles. Unlike object-oriented programming, components adhere strictly to the usage pattern outlined above, as introducing stateful objects which are not components complicates reasoning about programs (see Out of the Tarpit [here](https://curtclifton.net/papers/MoseleyMarks06a.pdf)).
 
 ### Components and Polymorphism
 
