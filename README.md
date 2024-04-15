@@ -1,6 +1,8 @@
-# Component Example
+# Components and Polymorphism example
 
-    $ clojure -M:run-m
+This project showcases a polymorphic datastore protocol based on the environment the example is running on. It shows that the datastore abstraction does not need to be a component.
+
+    $ APP_ENV=test clojure -X:test
 
 ### General Idea
 
