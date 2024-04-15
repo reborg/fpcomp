@@ -2,10 +2,17 @@
   (:require [integrant.core :as ig]
             [example.config :as config]))
 
-(def system-map
-  (-> (config/components)
-      ig/init))
+(let [lock (Object.)]
+  (defn- ig-load-ns!
+    [system-config]
+    (locking lock
+      (ig/load-namespaces system-config))))
 
-(def db
-  (-> system-map
+(defn system-map []
+  (let [cfg (config/components)]
+    (ig-load-ns! cfg)
+    cfg))
+
+(defn db []
+  (-> (system-map)
       :example.components.database/db))

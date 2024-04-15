@@ -8,13 +8,13 @@
 
 (defrecord DatastoreLocalFs [k]
   Datastore
-  (fetch [this] (slurp (:k this)))
-  (store [this v] (spit (:k this) v)))
+  (fetch [this] (println "fetch local") (slurp (:k this)))
+  (store [this v] (println "store local") (spit (:k this) v)))
 
 (defrecord DatastoreS3 [k]
   Datastore
-  (fetch [this] (slurp (:k this)))
-  (store [this v] (spit (:k this) v)))
+  (fetch [this] (println "fetch s3") (slurp (:k this)))
+  (store [this v] (println "store s3") (spit (:k this) v)))
 
 (defrecord DatastoreDB [k]
   Datastore

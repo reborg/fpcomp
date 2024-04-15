@@ -12,7 +12,6 @@
   (assoc db :connection :closed-connection))
 
 (defn execute [q]
-  (println "### Executing query" q)
-  (if (= db :open-connection)
-    (println "### Query executed")
+  (if (= (db) :open-connection)
+    (println "### Query executed:" q)
     (throw (Exception. "Connection is closed"))))
